@@ -10,11 +10,11 @@ using System.Diagnostics;
 
 namespace DBInterface
 {
-    public class DBConnector
+    public class DBConnector : IDisposable
     {
         private SqlConnectionStringBuilder connectionString;
-        private SqlConnection connection;
         private List<SqlParameter> Parameters { get; set; }
+        private bool disposed = false;
 
         public List<Error> ErrorList { get; set; }
         
@@ -275,6 +275,40 @@ namespace DBInterface
                 ErrorList.Add(aError);
             }
             return resultSet;
+        }
+
+        /// <summary>
+        /// Disposes of any unmanaged resources or managed recources that implement IDisposable
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+
+            // Use SupressFinalize in case a subclass 
+            // of this type implements a finalizer.
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Overrides the native Didspose method
+        /// </summary>
+        /// <param name="disposing">True or False</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // Clear all property values that maybe have been set
+                    // when the class was instantiated 
+                    Clear();
+                    connectionString.Clear();
+                    connectionString = null;
+                }
+
+                // Indicate that the instance has been disposed.
+                disposed = true;
+            }
         }
 
         //returns the current method name
