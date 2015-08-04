@@ -114,7 +114,7 @@ namespace DBInterface
             }
             catch (Exception ex)
             {
-                Error aError = new Error(ex.Source, ex.Message, "CanConnect");
+                Error aError = new Error(ex.Source, ex.Message, GetCurrentMethod());
                 ErrorList.Add(aError);
                 canConnect = false;
             }
@@ -150,7 +150,7 @@ namespace DBInterface
             }
             catch (Exception ex)
             {
-                Error aError = new Error(ex.Source, ex.Message, "ExecuteNonQuery");
+                Error aError = new Error(ex.Source, ex.Message, GetCurrentMethod());
                 ErrorList.Add(aError);
             }
             return rowsAffected;
@@ -185,7 +185,7 @@ namespace DBInterface
             }
             catch (Exception ex)
             {
-                Error aError = new Error(ex.Source, ex.Message, "ExecuteScalar");
+                Error aError = new Error(ex.Source, ex.Message, GetCurrentMethod());
                 ErrorList.Add(aError);
             }
             return value;
@@ -225,7 +225,7 @@ namespace DBInterface
             }
             catch (Exception ex)
             {
-                Error aError = new Error(ex.Source, ex.Message, "GetTable");
+                Error aError = new Error(ex.Source, ex.Message, GetCurrentMethod());
                 ErrorList.Add(aError);
             }
             return resultSet;
@@ -271,7 +271,7 @@ namespace DBInterface
             }
             catch (Exception ex)
             {
-                Error aError = new Error(ex.Source, ex.Message, "GetDataSet");
+                Error aError = new Error(ex.Source, ex.Message, GetCurrentMethod());
                 ErrorList.Add(aError);
             }
             return resultSet;
