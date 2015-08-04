@@ -46,10 +46,12 @@ namespace DBConnectorTester
                 int rows = conn.ExecuteNonQuery(txtQuery.Text, CommandType.Text);
                 if(rows <= 0)
                 {
-                    DataSet values = new DataSet();
-                    values = conn.GetDataSet(txtQuery.Text, CommandType.Text);
+                    conn.Clear();
+                    //DataSet values = new DataSet();
+                    DataTable values = new DataTable();
+                    values = conn.GetTable(txtQuery.Text, CommandType.Text);
 
-                    lblMessage.Text = values.Tables.Count.ToString() + " tables were affected.";
+                    lblMessage.Text = values.Rows.Count.ToString() + " tables were affected.";
                 }
                 else
                 {

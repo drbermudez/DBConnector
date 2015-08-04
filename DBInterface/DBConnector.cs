@@ -10,13 +10,19 @@ using System.Diagnostics;
 
 namespace DBInterface
 {
+    /// <summary>
+    /// Public class that enables connection to a SQL Server data base and execute commands.
+    /// </summary>
     public class DBConnector : IDisposable
     {
         private SqlConnectionStringBuilder connectionString;
         private List<SqlParameter> Parameters { get; set; }
-        private bool disposed = false;
+        private bool disposed = false; //used for the Dispose method
 
-        public List<Error> ErrorList { get; set; }
+        /// <summary>
+        /// Gets a list of Error objects with error messages
+        /// </summary>
+        public List<Error> ErrorList { get; private set; }
         
         /// <summary>
         /// Main constructor
@@ -311,7 +317,10 @@ namespace DBInterface
             }
         }
 
-        //returns the current method name
+        /// <summary>
+        /// Returns the name of the method or routine being executed
+        /// </summary>
+        /// <returns>Name of the method or routine as a string value</returns>
         [MethodImpl(MethodImplOptions.NoInlining)]
         private string GetCurrentMethod()
         {
