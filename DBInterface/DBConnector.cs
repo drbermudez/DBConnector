@@ -1,0 +1,290 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
+
+namespace DBInterface
+{
+    public class DBConnector
+    {
+        private SqlConnectionStringBuilder connectionString;
+        private SqlConnection connection;
+        private List<SqlParameter> Parameters { get; set; }
+
+        public List<Error> ErrorList { get; set; }
+        
+        /// <summary>
+        /// Main constructor
+        /// </summary>
+        /// <param name="dataSource">Server name</param>
+        /// <param name="initialCatalog">Data base name</param>
+        /// <param name="userId">User Id</param>
+        /// <param name="passWord">Password</param>
+        /// <param name="persistSecurityInfo">Whether to keep password in memory or not</param>
+        public DBConnector(string dataSource, string initialCatalog, string userId, string passWord, bool persistSecurityInfo, bool integratedSecurity)
+        {
+            connectionString = new SqlConnectionStringBuilder();
+            connectionString.DataSource = dataSource;
+            connectionString.InitialCatalog = initialCatalog;
+            connectionString.UserID = userId;
+            connectionString.Password = passWord;
+            connectionString.PersistSecurityInfo = persistSecurityInfo;
+            connectionString.IntegratedSecurity = integratedSecurity;
+            connectionString.ConnectTimeout = 40;
+            Parameters = new List<SqlParameter>();
+            ErrorList = new List<Error>();
+        }
+
+        /// <summary>
+        /// Main constructor
+        /// </summary>
+        /// <param name="connString">A connection string to the database</param>
+        public DBConnector(string connString)
+        {
+            connectionString = new SqlConnectionStringBuilder(connString);
+            Parameters = new List<SqlParameter>();
+            ErrorList = new List<Error>();
+        }
+
+        /// <summary>
+        /// Clears the list of SQL Parameters and the list of Errors
+        /// </summary>
+        public void Clear()
+        {
+            Parameters.Clear();
+            ErrorList.Clear();
+        }
+
+        /// <summary>
+        /// Add a parameter to the Sql Command
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <param name="type">Type of parameter in .Net</param>
+        /// <param name="dbType">Type of parameter in SQL Server</param>
+        /// <param name="direction">Parameter direction (default is input)</param>
+        /// <param name="value">Value for the parameter</param>
+        public void AddParameter(string name, object value, DbType type, SqlDbType dbType, ParameterDirection direction = ParameterDirection.Input)
+        {
+            SqlParameter parameter = new SqlParameter();
+            parameter.DbType = type;
+            parameter.Direction = direction;
+            parameter.ParameterName = name;
+            parameter.SqlDbType = dbType;
+            parameter.Value = value;
+            if (!Parameters.Contains(parameter))
+            {
+                Parameters.Add(parameter);
+            }
+        }
+
+        /// <summary>
+        /// Add a list of parameters to the Sql Command
+        /// </summary>
+        /// <param name="parameters">List of SQL Parameters</param>
+        public void AddParameters(List<SqlParameter> parameters)
+        {
+            foreach(SqlParameter parameter in parameters)
+            {
+                if (!Parameters.Contains(parameter))
+                {
+                    Parameters.Add(parameter);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get whether the connection can be established or not
+        /// </summary>
+        public bool CanConnect()
+        {
+            bool canConnect = false;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString.ConnectionString))
+                {
+                    connection.Open();
+                    canConnect = Convert.ToBoolean(connection.State == ConnectionState.Open);
+                    connection.Close();
+                }                                
+            }
+            catch (Exception ex)
+            {
+                Error aError = new Error(ex.Source, ex.Message, "CanConnect");
+                ErrorList.Add(aError);
+                canConnect = false;
+            }
+            return canConnect;
+        }
+
+        /// <summary>
+        /// Execute SQL command and return the number of rows affected
+        /// </summary>
+        /// <param name="command">Command (Text command or Stored Procedure)</param>
+        /// <param name="type">Type of command (text, stored procedure or table-direct)</param>
+        /// <returns>Number of rows affected</returns>
+        public int ExecuteNonQuery(string command, CommandType type)
+        {
+            int rowsAffected = 0;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString.ConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(command))
+                    {
+                        cmd.Connection = connection;
+                        foreach(SqlParameter parameter in Parameters)
+                        {
+                            cmd.Parameters.Add(parameter);
+                        }
+                        cmd.CommandType = type;
+                        cmd.Connection.Open();
+                        rowsAffected = cmd.ExecuteNonQuery();
+                        cmd.Connection.Close();
+                    }                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Error aError = new Error(ex.Source, ex.Message, "ExecuteNonQuery");
+                ErrorList.Add(aError);
+            }
+            return rowsAffected;
+        }
+        
+        /// <summary>
+        /// Returns the first column of the first row in the executed query. Additional rows and columns are ignored.
+        /// </summary>
+        /// <param name="command">Command (Text command or Stored Procedure)</param>
+        /// <param name="type">Type of command (text, stored procedure or table-direct)</param>
+        /// <returns></returns>
+        public object ExecuteScalar(string command, CommandType type)
+        {
+            object value = null;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString.ConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(command))
+                    {
+                        cmd.Connection = connection;
+                        foreach (SqlParameter parameter in Parameters)
+                        {
+                            cmd.Parameters.Add(parameter);
+                        }
+                        cmd.CommandType = type;
+                        cmd.Connection.Open();
+                        value = cmd.ExecuteScalar();
+                        cmd.Connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error aError = new Error(ex.Source, ex.Message, "ExecuteScalar");
+                ErrorList.Add(aError);
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Uses a SQL Data Reader to load a data table with data from the query execution
+        /// </summary>
+        /// <param name="command">Command (Text command or Stored Procedure)</param>
+        /// <param name="type">Type of command (text, stored procedure or table-direct)</param>
+        /// <returns>Data Table with the execution results</returns>
+        public DataTable GetTable(string command, CommandType type)
+        {            
+            DataTable resultSet = new DataTable();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString.ConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(command))
+                    {
+                        cmd.Connection = connection;
+                        foreach (SqlParameter parameter in Parameters)
+                        {
+                            cmd.Parameters.Add(parameter);
+                        }
+                        cmd.CommandType = type;
+                        cmd.Connection.Open();
+
+                        SqlDataReader reader = null;
+                        reader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+
+                        resultSet.Load(reader);
+                        reader.Close();
+                        cmd.Connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error aError = new Error(ex.Source, ex.Message, "GetTable");
+                ErrorList.Add(aError);
+            }
+            return resultSet;
+        }
+
+        /// <summary>
+        /// Uses a SQL Data Reader to load a data set with data tables from the query execution
+        /// </summary>
+        /// <param name="command">Command (Text command or Stored Procedure)</param>
+        /// <param name="type">Type of command (text, stored procedure or table-direct)</param>
+        /// <returns>Data Set with Data Tables containing the execution results</returns>
+        public DataSet GetDataSet(string command, CommandType type)
+        {
+            DataSet resultSet = new DataSet();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString.ConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(command))
+                    {
+                        cmd.Connection = connection;
+                        foreach (SqlParameter parameter in Parameters)
+                        {
+                            cmd.Parameters.Add(parameter);
+                        }
+                        cmd.CommandType = type;
+                        cmd.Connection.Open();
+
+                        SqlDataReader reader = null;
+                        reader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+
+                        do
+                        {
+                            DataTable table = new DataTable();
+                            table.Load(reader);
+                            resultSet.Tables.Add(table);
+                        } while (!reader.IsClosed);
+
+                        reader.Close();
+                        cmd.Connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error aError = new Error(ex.Source, ex.Message, "GetDataSet");
+                ErrorList.Add(aError);
+            }
+            return resultSet;
+        }
+
+        //returns the current method name
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private string GetCurrentMethod()
+        {
+            StackTrace st = new StackTrace();
+            StackFrame sf = st.GetFrame(1);
+
+            return sf.GetMethod().Name;
+        }
+    }
+}
