@@ -22,7 +22,8 @@ namespace DBConnectorTester
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            DBConnector conn = new DBConnector(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, txtPassword.Text, Convert.ToBoolean(cmbPersist.SelectedItem), integratedSecurity);
+            DBConnectorMSSQL conn = new DBConnectorMSSQL(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, txtPassword.Text, 
+                                               Convert.ToBoolean(cmbPersist.SelectedItem), integratedSecurity, 40);
 
             if(conn.CanConnect())
             {
@@ -41,7 +42,9 @@ namespace DBConnectorTester
         {
             if (txtQuery.Text.Trim().Length > 0)
             {
-                DBConnector conn = new DBConnector(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, txtPassword.Text, Convert.ToBoolean(cmbPersist.SelectedItem), integratedSecurity);
+                DBConnectorMSSQL conn = new DBConnectorMSSQL(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, 
+                                                   txtPassword.Text, Convert.ToBoolean(cmbPersist.SelectedItem), 
+                                                   integratedSecurity, 40);
 
                 int rows = conn.ExecuteNonQuery(txtQuery.Text, CommandType.Text);
                 if(rows <= 0)

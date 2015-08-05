@@ -1,0 +1,1 @@
+﻿For examples on how to build connection strings, visit: http://www.dofactory.com/reference/connection-strings

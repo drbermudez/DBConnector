@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess.Types;
+using IBM.Data.DB2;
+using IBM.Data.DB2Types;
 
 namespace DBInterface
 {
     /// <summary>
-    /// Public class that enables connection to an Oracle SQL data base and execute commands.
+    /// Public class that enables connection to an DB2 SQL data base and execute commands.
     /// </summary>
-    public class DBConnectorOracle: IDisposable
+    class DBConnectorDB2: IDisposable
     {
-        private OracleConnectionStringBuilder connectionString;
-        private List<OracleParameter> Parameters { get; set; }
+        private DB2ConnectionStringBuilder connectionString;
+        private List<DB2Parameter> Parameters { get; set; }
         private bool disposed = false; //used for the Dispose method
 
         /// <summary>
         /// Gets a list of Error objects with error messages
         /// </summary>
         public List<Error> ErrorList { get; private set; }
-        
+
         /// <summary>
         /// Main constructor
         /// </summary>
@@ -33,26 +33,21 @@ namespace DBInterface
         /// <param name="userId">User Id</param>
         /// <param name="passWord">Password</param>
         /// <param name="persistSecurityInfo">Whether to keep password in memory or not</param>
-        /// <param name="integratedSecurity">Use Windows Authentication</param>
-        /// <param name="connectionTimeOut">Time in seconds before a connection timeout occurs</param>
-        public DBConnectorOracle(string dataSource, string initialCatalog, string userId, string passWord,
-                                   bool persistSecurityInfo, bool integratedSecurity, int connectionTimeOut)
+        /// <param name="queryTimeout">Time in seconds for query execution time before a timeout exception</param>
+        /// <param name="connectionTimeOut">Time in seconds for connection time before a timeout exception</param>
+        public DBConnectorDB2(string dataSource, string initialCatalog, string userId, string passWord, 
+                                bool persistSecurityInfo, int queryTimeout, int connectionTimeOut)
         {
-            connectionString = new OracleConnectionStringBuilder();
-            connectionString.DataSource = dataSource;  
-            if (integratedSecurity)
-            {
-                connectionString.UserID = "/";
-                connectionString.Password = "";
-            }
-            else
-            {
-                connectionString.UserID = userId;
-                connectionString.Password = passWord;
-            }
+            connectionString = new DB2ConnectionStringBuilder();
+            connectionString.Database = initialCatalog;
+            connectionString.allowDynamicSQL = true;
+            connectionString.QueryTimeout = queryTimeout;
+            connectionString.Server = dataSource;            
+            connectionString.UserID = userId;
+            connectionString.Password = passWord;            
             connectionString.PersistSecurityInfo = persistSecurityInfo;
-            connectionString.ConnectionTimeout = connectionTimeOut;
-            Parameters = new List<OracleParameter>();
+            connectionString.Connect_Timeout = connectionTimeOut;
+            Parameters = new List<DB2Parameter>();
             ErrorList = new List<Error>();
         }
 
@@ -60,10 +55,10 @@ namespace DBInterface
         /// Main constructor
         /// </summary>
         /// <param name="connString">A connection string to the database</param>
-        public DBConnectorOracle(string connString)
+        public DBConnectorDB2(string connString)
         {
-            connectionString = new OracleConnectionStringBuilder(connString);
-            Parameters = new List<OracleParameter>();
+            connectionString = new DB2ConnectionStringBuilder(connString);
+            Parameters = new List<DB2Parameter>();
             ErrorList = new List<Error>();
         }
 
@@ -84,13 +79,13 @@ namespace DBInterface
         /// <param name="dbType">Type of parameter in SQL Server</param>
         /// <param name="direction">Parameter direction (default is input)</param>
         /// <param name="value">Value for the parameter</param>
-        public void AddParameter(string name, object value, DbType type, OracleDbType dbType, ParameterDirection direction = ParameterDirection.Input)
+        public void AddParameter(string name, object value, DbType type, DB2Type dbType, ParameterDirection direction = ParameterDirection.Input)
         {
-            OracleParameter parameter = new OracleParameter();
+            DB2Parameter parameter = new DB2Parameter();
             parameter.DbType = type;
             parameter.Direction = direction;
             parameter.ParameterName = name;
-            parameter.OracleDbType = dbType;
+            parameter.DB2Type = dbType;
             parameter.Value = value;
             if (!Parameters.Contains(parameter))
             {
@@ -102,9 +97,9 @@ namespace DBInterface
         /// Add a list of parameters to the Sql Command
         /// </summary>
         /// <param name="parameters">List of SQL Parameters</param>
-        public void AddParameters(List<OracleParameter> parameters)
+        public void AddParameters(List<DB2Parameter> parameters)
         {
-            foreach(OracleParameter parameter in parameters)
+            foreach(DB2Parameter parameter in parameters)
             {
                 if (!Parameters.Contains(parameter))
                 {
@@ -121,7 +116,7 @@ namespace DBInterface
             bool canConnect = false;
             try
             {
-                using (OracleConnection connection = new OracleConnection(connectionString.ConnectionString))
+                using (DB2Connection connection = new DB2Connection(connectionString.ConnectionString))
                 {
                     connection.Open();
                     canConnect = Convert.ToBoolean(connection.State == ConnectionState.Open);
@@ -148,12 +143,12 @@ namespace DBInterface
             int rowsAffected = 0;
             try
             {
-                using (OracleConnection connection = new OracleConnection(connectionString.ConnectionString))
+                using (DB2Connection connection = new DB2Connection(connectionString.ConnectionString))
                 {
-                    using (OracleCommand cmd = new OracleCommand(command))
+                    using (DB2Command cmd = new DB2Command(command))
                     {
                         cmd.Connection = connection;
-                        foreach(OracleParameter parameter in Parameters)
+                        foreach(DB2Parameter parameter in Parameters)
                         {
                             cmd.Parameters.Add(parameter);
                         }
@@ -183,12 +178,12 @@ namespace DBInterface
             object value = null;
             try
             {
-                using (OracleConnection connection = new OracleConnection(connectionString.ConnectionString))
+                using (DB2Connection connection = new DB2Connection(connectionString.ConnectionString))
                 {
-                    using (OracleCommand cmd = new OracleCommand(command))
+                    using (DB2Command cmd = new DB2Command(command))
                     {
                         cmd.Connection = connection;
-                        foreach (OracleParameter parameter in Parameters)
+                        foreach (DB2Parameter parameter in Parameters)
                         {
                             cmd.Parameters.Add(parameter);
                         }
@@ -218,19 +213,19 @@ namespace DBInterface
             DataTable resultSet = new DataTable();
             try
             {
-                using (OracleConnection connection = new OracleConnection(connectionString.ConnectionString))
+                using (DB2Connection connection = new DB2Connection(connectionString.ConnectionString))
                 {
-                    using (OracleCommand cmd = new OracleCommand(command))
+                    using (DB2Command cmd = new DB2Command(command))
                     {
                         cmd.Connection = connection;
-                        foreach (OracleParameter parameter in Parameters)
+                        foreach (DB2Parameter parameter in Parameters)
                         {
                             cmd.Parameters.Add(parameter);
                         }
                         cmd.CommandType = type;
                         cmd.Connection.Open();
 
-                        OracleDataReader reader = null;
+                        DB2DataReader reader = null;
                         reader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
 
                         resultSet.Load(reader);
@@ -258,19 +253,19 @@ namespace DBInterface
             DataSet resultSet = new DataSet();
             try
             {
-                using (OracleConnection connection = new OracleConnection(connectionString.ConnectionString))
+                using (DB2Connection connection = new DB2Connection(connectionString.ConnectionString))
                 {
-                    using (OracleCommand cmd = new OracleCommand(command))
+                    using (DB2Command cmd = new DB2Command(command))
                     {
                         cmd.Connection = connection;
-                        foreach (OracleParameter parameter in Parameters)
+                        foreach (DB2Parameter parameter in Parameters)
                         {
                             cmd.Parameters.Add(parameter);
                         }
                         cmd.CommandType = type;
                         cmd.Connection.Open();
 
-                        OracleDataReader reader = null;
+                        DB2DataReader reader = null;
                         reader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
 
                         do

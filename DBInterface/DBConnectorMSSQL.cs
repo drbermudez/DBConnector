@@ -13,7 +13,7 @@ namespace DBInterface
     /// <summary>
     /// Public class that enables connection to a MS SQL Server data base and execute commands.
     /// </summary>
-    public class DBConnector : IDisposable
+    public class DBConnectorMSSQL : IDisposable
     {
         private SqlConnectionStringBuilder connectionString;
         private List<SqlParameter> Parameters { get; set; }
@@ -32,8 +32,10 @@ namespace DBInterface
         /// <param name="userId">User Id</param>
         /// <param name="passWord">Password</param>
         /// <param name="persistSecurityInfo">Whether to keep password in memory or not</param>
-        /// <param name="integratedSecurity"></param>
-        public DBConnector(string dataSource, string initialCatalog, string userId, string passWord, bool persistSecurityInfo, bool integratedSecurity)
+        /// <param name="integratedSecurity">Use Windows Authentication</param>
+        /// <param name="connectionTimeOut">Time in seconds before a connection timeout occurs</param>
+        public DBConnectorMSSQL(string dataSource, string initialCatalog, string userId, string passWord,
+                           bool persistSecurityInfo, bool integratedSecurity, int connectionTimeOut)
         {
             connectionString = new SqlConnectionStringBuilder();
             connectionString.DataSource = dataSource;
@@ -42,7 +44,7 @@ namespace DBInterface
             connectionString.Password = passWord;
             connectionString.PersistSecurityInfo = persistSecurityInfo;
             connectionString.IntegratedSecurity = integratedSecurity;
-            connectionString.ConnectTimeout = 40;
+            connectionString.ConnectTimeout = connectionTimeOut;
             Parameters = new List<SqlParameter>();
             ErrorList = new List<Error>();
         }
@@ -51,7 +53,7 @@ namespace DBInterface
         /// Main constructor
         /// </summary>
         /// <param name="connString">A connection string to the database</param>
-        public DBConnector(string connString)
+        public DBConnectorMSSQL(string connString)
         {
             connectionString = new SqlConnectionStringBuilder(connString);
             Parameters = new List<SqlParameter>();
