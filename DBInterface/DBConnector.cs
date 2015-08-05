@@ -32,6 +32,7 @@ namespace DBInterface
         /// <param name="userId">User Id</param>
         /// <param name="passWord">Password</param>
         /// <param name="persistSecurityInfo">Whether to keep password in memory or not</param>
+        /// <param name="integratedSecurity"></param>
         public DBConnector(string dataSource, string initialCatalog, string userId, string passWord, bool persistSecurityInfo, bool integratedSecurity)
         {
             connectionString = new SqlConnectionStringBuilder();
