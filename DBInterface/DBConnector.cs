@@ -11,7 +11,7 @@ using System.Diagnostics;
 namespace DBInterface
 {
     /// <summary>
-    /// Public class that enables connection to a SQL Server data base and execute commands.
+    /// Public class that enables connection to a MS SQL Server data base and execute commands.
     /// </summary>
     public class DBConnector : IDisposable
     {
