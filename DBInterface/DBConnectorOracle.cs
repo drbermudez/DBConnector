@@ -80,14 +80,14 @@ namespace DBInterface
         /// Add a parameter to the Sql Command
         /// </summary>
         /// <param name="name">Parameter name</param>
-        /// <param name="type">Type of parameter in .Net</param>
-        /// <param name="dbType">Type of parameter in SQL Server</param>
-        /// <param name="direction">Parameter direction (default is input)</param>
         /// <param name="value">Value for the parameter</param>
-        public void AddParameter(string name, object value, DbType type, OracleDbType dbType, ParameterDirection direction = ParameterDirection.Input)
+        /// <param name="dbType">Type of parameter in SQL Server</param>
+        /// <param name="typeName">Name of a user-defined type, if using one.  Otherwise, leave empty.</param>
+        /// <param name="direction">Parameter direction (default is input)</param>
+        public void AddParameter(string name, object value, OracleDbType dbType, string typeName = "", ParameterDirection direction = ParameterDirection.Input)
         {
             OracleParameter parameter = new OracleParameter();
-            parameter.DbType = type;
+            parameter.UdtTypeName = typeName;
             parameter.Direction = direction;
             parameter.ParameterName = name;
             parameter.OracleDbType = dbType;

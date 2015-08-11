@@ -73,15 +73,15 @@ namespace DBInterface
         /// Add a parameter to the Sql Command
         /// </summary>
         /// <param name="name">Parameter name</param>
-        /// <param name="type">Type of parameter in .Net</param>
-        /// <param name="dbType">Type of parameter in SQL Server</param>
-        /// <param name="direction">Parameter direction (default is input)</param>
         /// <param name="value">Value for the parameter</param>
-        public void AddParameter(string name, object value, DbType type, SqlDbType dbType, ParameterDirection direction = ParameterDirection.Input)
+        /// <param name="dbType">Type of parameter in SQL Server</param>
+        /// <param name="typeName">Explicit name of the parameter type</param>
+        /// <param name="direction">Parameter direction (default is input)</param>        
+        public void AddParameter(string name, object value, SqlDbType dbType, string typeName = "", ParameterDirection direction = ParameterDirection.Input)
         {
             SqlParameter parameter = new SqlParameter();
-            parameter.DbType = type;
             parameter.Direction = direction;
+            parameter.TypeName = typeName;
             parameter.ParameterName = name;
             parameter.SqlDbType = dbType;
             parameter.Value = value;
