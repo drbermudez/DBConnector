@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace DBInterface
 {
+    /// <summary>
+    /// Class that encapsulates the error message structure
+    /// </summary>
     public class Error
     {
         /// <summary>

@@ -96,7 +96,7 @@
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(211, 20);
             this.txtServer.TabIndex = 5;
-            this.txtServer.Text = "GHPSQLAPPSDEV";
+            this.txtServer.Text = "Win10PC\\SQL2014EXPRESS";
             // 
             // txtDBName
             // 
@@ -104,7 +104,7 @@
             this.txtDBName.Name = "txtDBName";
             this.txtDBName.Size = new System.Drawing.Size(211, 20);
             this.txtDBName.TabIndex = 6;
-            this.txtDBName.Text = "FMAutomatorDB";
+            this.txtDBName.Text = "MovieCatalogue";
             // 
             // txtUsername
             // 

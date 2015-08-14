@@ -54,7 +54,7 @@ namespace DBConnectorTester
                     DataTable values = new DataTable();
                     values = conn.GetTable(txtQuery.Text, CommandType.Text);
 
-                    lblMessage.Text = values.Rows.Count.ToString() + " tables were affected.";
+                    lblMessage.Text = values.Rows.Count.ToString() + " rows were affected.";
                 }
                 else
                 {
