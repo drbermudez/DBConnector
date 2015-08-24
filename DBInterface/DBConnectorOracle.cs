@@ -43,7 +43,7 @@ namespace DBInterface
             if (integratedSecurity)
             {
                 connectionString.UserID = "/";
-                connectionString.Password = "";
+                //connectionString.Password = "";
             }
             else
             {
