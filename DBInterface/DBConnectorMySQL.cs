@@ -30,7 +30,8 @@ namespace DBInterface
         /// <param name="userId">User Id</param>
         /// <param name="passWord">Password</param>
         /// <param name="persistSecurityInfo">Whether to keep password in memory or not</param>
-        /// <param name="queryTimeout">Time in seconds for query execution time before a timeout exception</param>
+        /// <param name="integratedSecurity">Use Windows Authentication</param>
+        /// <param name="commandTimeout">Time in seconds for query execution time before a timeout exception</param>
         /// <param name="connectionTimeOut">Time in seconds for connection time before a timeout exception</param>
         public DBConnectorMySQL(string dataSource, string initialCatalog, string userId, string passWord, 
                                 bool persistSecurityInfo, bool integratedSecurity, uint commandTimeout, uint connectionTimeOut)
