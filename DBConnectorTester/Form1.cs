@@ -18,13 +18,16 @@ namespace DBConnectorTester
         public frmMain()
         {
             InitializeComponent();
+            cmbPersist.SelectedIndex = 0;
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            DBConnectorMSSQL conn = new DBConnectorMSSQL(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, txtPassword.Text, 
-                                               Convert.ToBoolean(cmbPersist.SelectedItem), integratedSecurity, 40);
+            //DBConnectorMSSQL conn = new DBConnectorMSSQL(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, txtPassword.Text,
+            //                                   Convert.ToBoolean(cmbPersist.SelectedItem), integratedSecurity, 40);
 
+            DBConnectorMySQL conn = new DBConnectorMySQL(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, txtPassword.Text,
+                                                         Convert.ToBoolean(cmbPersist.SelectedItem), integratedSecurity, 60, 30);
             if(conn.CanConnect())
             {
                 lblMessage.Text = "Connection successful!";
@@ -42,9 +45,12 @@ namespace DBConnectorTester
         {
             if (txtQuery.Text.Trim().Length > 0)
             {
-                DBConnectorMSSQL conn = new DBConnectorMSSQL(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, 
-                                                   txtPassword.Text, Convert.ToBoolean(cmbPersist.SelectedItem), 
-                                                   integratedSecurity, 40);
+                //DBConnectorMSSQL conn = new DBConnectorMSSQL(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, 
+                //                                   txtPassword.Text, Convert.ToBoolean(cmbPersist.SelectedItem), 
+                //                                   integratedSecurity, 40);
+
+                DBConnectorMySQL conn = new DBConnectorMySQL(@txtServer.Text, @txtDBName.Text, @txtUsername.Text, txtPassword.Text,
+                                                         Convert.ToBoolean(cmbPersist.SelectedItem), integratedSecurity, 60, 30);
 
                 int rows = conn.ExecuteNonQuery(txtQuery.Text, CommandType.Text);
                 if(rows <= 0)

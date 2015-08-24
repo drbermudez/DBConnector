@@ -14,7 +14,7 @@ namespace DBInterface
     /// <summary>
     /// Public class that enables connection to an DB2 SQL data base and execute commands.
     /// </summary>
-    class DBConnectorDB2: IDisposable
+    public class DBConnectorDB2: IDisposable
     {
         private DB2ConnectionStringBuilder connectionString;
         private List<DB2Parameter> Parameters { get; set; }
