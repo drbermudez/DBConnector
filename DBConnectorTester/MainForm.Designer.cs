@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.btnConnect = new System.Windows.Forms.Button();
             this.lblDB = new System.Windows.Forms.Label();
             this.lblServer = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
@@ -38,17 +39,25 @@
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.cmbPersist = new System.Windows.Forms.ComboBox();
-            this.btnConnect = new System.Windows.Forms.Button();
-            this.lblMessage = new System.Windows.Forms.Label();
-            this.btnExecute = new System.Windows.Forms.Button();
-            this.txtQuery = new System.Windows.Forms.TextBox();
             this.chkIntegrated = new System.Windows.Forms.CheckBox();
+            this.lblDriver = new System.Windows.Forms.Label();
+            this.cmbDriver = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.Location = new System.Drawing.Point(111, 246);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(126, 32);
+            this.btnConnect.TabIndex = 10;
+            this.btnConnect.Text = "Test &Connection";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // lblDB
             // 
             this.lblDB.AutoSize = true;
-            this.lblDB.Location = new System.Drawing.Point(27, 50);
+            this.lblDB.Location = new System.Drawing.Point(27, 82);
             this.lblDB.Name = "lblDB";
             this.lblDB.Size = new System.Drawing.Size(85, 13);
             this.lblDB.TabIndex = 0;
@@ -57,7 +66,7 @@
             // lblServer
             // 
             this.lblServer.AutoSize = true;
-            this.lblServer.Location = new System.Drawing.Point(27, 25);
+            this.lblServer.Location = new System.Drawing.Point(27, 57);
             this.lblServer.Name = "lblServer";
             this.lblServer.Size = new System.Drawing.Size(41, 13);
             this.lblServer.TabIndex = 1;
@@ -66,7 +75,7 @@
             // lblUser
             // 
             this.lblUser.AutoSize = true;
-            this.lblUser.Location = new System.Drawing.Point(27, 75);
+            this.lblUser.Location = new System.Drawing.Point(27, 107);
             this.lblUser.Name = "lblUser";
             this.lblUser.Size = new System.Drawing.Size(58, 13);
             this.lblUser.TabIndex = 2;
@@ -75,7 +84,7 @@
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(27, 100);
+            this.lblPassword.Location = new System.Drawing.Point(27, 132);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(56, 13);
             this.lblPassword.TabIndex = 3;
@@ -84,7 +93,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 124);
+            this.label1.Location = new System.Drawing.Point(27, 156);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(103, 13);
             this.label1.TabIndex = 4;
@@ -92,7 +101,7 @@
             // 
             // txtServer
             // 
-            this.txtServer.Location = new System.Drawing.Point(118, 22);
+            this.txtServer.Location = new System.Drawing.Point(118, 54);
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(211, 20);
             this.txtServer.TabIndex = 5;
@@ -100,7 +109,7 @@
             // 
             // txtDBName
             // 
-            this.txtDBName.Location = new System.Drawing.Point(118, 47);
+            this.txtDBName.Location = new System.Drawing.Point(118, 79);
             this.txtDBName.Name = "txtDBName";
             this.txtDBName.Size = new System.Drawing.Size(211, 20);
             this.txtDBName.TabIndex = 6;
@@ -108,14 +117,14 @@
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(118, 72);
+            this.txtUsername.Location = new System.Drawing.Point(118, 104);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(211, 20);
             this.txtUsername.TabIndex = 7;
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(118, 97);
+            this.txtPassword.Location = new System.Drawing.Point(118, 129);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(211, 20);
@@ -128,51 +137,15 @@
             this.cmbPersist.Items.AddRange(new object[] {
             "true",
             "false"});
-            this.cmbPersist.Location = new System.Drawing.Point(136, 121);
+            this.cmbPersist.Location = new System.Drawing.Point(136, 153);
             this.cmbPersist.Name = "cmbPersist";
             this.cmbPersist.Size = new System.Drawing.Size(69, 21);
             this.cmbPersist.TabIndex = 9;
             // 
-            // btnConnect
-            // 
-            this.btnConnect.Location = new System.Drawing.Point(30, 162);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(92, 32);
-            this.btnConnect.TabIndex = 10;
-            this.btnConnect.Text = "&Connect";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-            // 
-            // lblMessage
-            // 
-            this.lblMessage.AutoSize = true;
-            this.lblMessage.Location = new System.Drawing.Point(133, 169);
-            this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(0, 13);
-            this.lblMessage.TabIndex = 11;
-            // 
-            // btnExecute
-            // 
-            this.btnExecute.Location = new System.Drawing.Point(30, 265);
-            this.btnExecute.Name = "btnExecute";
-            this.btnExecute.Size = new System.Drawing.Size(92, 32);
-            this.btnExecute.TabIndex = 12;
-            this.btnExecute.Text = "&Execute query";
-            this.btnExecute.UseVisualStyleBackColor = true;
-            this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
-            // 
-            // txtQuery
-            // 
-            this.txtQuery.Location = new System.Drawing.Point(30, 207);
-            this.txtQuery.Multiline = true;
-            this.txtQuery.Name = "txtQuery";
-            this.txtQuery.Size = new System.Drawing.Size(299, 54);
-            this.txtQuery.TabIndex = 13;
-            // 
             // chkIntegrated
             // 
             this.chkIntegrated.AutoSize = true;
-            this.chkIntegrated.Location = new System.Drawing.Point(211, 123);
+            this.chkIntegrated.Location = new System.Drawing.Point(211, 155);
             this.chkIntegrated.Name = "chkIntegrated";
             this.chkIntegrated.Size = new System.Drawing.Size(113, 17);
             this.chkIntegrated.TabIndex = 14;
@@ -180,15 +153,38 @@
             this.chkIntegrated.UseVisualStyleBackColor = true;
             this.chkIntegrated.CheckedChanged += new System.EventHandler(this.chkIntegrated_CheckedChanged);
             // 
+            // lblDriver
+            // 
+            this.lblDriver.AutoSize = true;
+            this.lblDriver.Location = new System.Drawing.Point(27, 31);
+            this.lblDriver.Name = "lblDriver";
+            this.lblDriver.Size = new System.Drawing.Size(38, 13);
+            this.lblDriver.TabIndex = 15;
+            this.lblDriver.Text = "Driver:";
+            // 
+            // cmbDriver
+            // 
+            this.cmbDriver.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDriver.FormattingEnabled = true;
+            this.cmbDriver.Items.AddRange(new object[] {
+            "IBM DB2 10",
+            "Oracle 12g",
+            "MS SQL 2014",
+            "Postgre SQL 3.0.1",
+            "MySql 6.9"});
+            this.cmbDriver.Location = new System.Drawing.Point(118, 28);
+            this.cmbDriver.Name = "cmbDriver";
+            this.cmbDriver.Size = new System.Drawing.Size(211, 21);
+            this.cmbDriver.TabIndex = 16;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(348, 309);
+            this.Controls.Add(this.cmbDriver);
+            this.Controls.Add(this.lblDriver);
             this.Controls.Add(this.chkIntegrated);
-            this.Controls.Add(this.txtQuery);
-            this.Controls.Add(this.btnExecute);
-            this.Controls.Add(this.lblMessage);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.cmbPersist);
             this.Controls.Add(this.txtPassword);
@@ -211,7 +207,7 @@
         }
 
         #endregion
-
+        private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Label lblDB;
         private System.Windows.Forms.Label lblServer;
         private System.Windows.Forms.Label lblUser;
@@ -222,11 +218,9 @@
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.ComboBox cmbPersist;
-        private System.Windows.Forms.Button btnConnect;
-        private System.Windows.Forms.Label lblMessage;
-        private System.Windows.Forms.Button btnExecute;
-        private System.Windows.Forms.TextBox txtQuery;
         private System.Windows.Forms.CheckBox chkIntegrated;
+        private System.Windows.Forms.Label lblDriver;
+        private System.Windows.Forms.ComboBox cmbDriver;
     }
 }
 
