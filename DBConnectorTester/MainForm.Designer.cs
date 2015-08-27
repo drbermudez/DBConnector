@@ -46,6 +46,7 @@
             // 
             // btnConnect
             // 
+            this.btnConnect.Enabled = false;
             this.btnConnect.Location = new System.Drawing.Point(111, 246);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(126, 32);
@@ -176,6 +177,7 @@
             this.cmbDriver.Name = "cmbDriver";
             this.cmbDriver.Size = new System.Drawing.Size(211, 21);
             this.cmbDriver.TabIndex = 16;
+            this.cmbDriver.DropDownClosed += new System.EventHandler(this.cmbDriver_DropDownClosed);
             // 
             // frmMain
             // 

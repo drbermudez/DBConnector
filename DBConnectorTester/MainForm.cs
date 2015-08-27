@@ -129,5 +129,10 @@ namespace DBConnectorTester
                 txtUsername.Clear();
             }
         }
+
+        private void cmbDriver_DropDownClosed(object sender, EventArgs e)
+        {           
+            btnConnect.Enabled = Convert.ToBoolean(cmbDriver.SelectedIndex >= 0);
+        }
     }
 }
