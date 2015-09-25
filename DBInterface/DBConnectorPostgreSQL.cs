@@ -11,7 +11,10 @@ using NpgsqlTypes;
 
 namespace DBInterface
 {
-    class DBConnectorPostgreSQL: IDisposable
+    /// <summary>
+    /// Public class that enables connection to an Postgre SQL data base and execute commands.
+    /// </summary>
+    public class DBConnectorPostgreSQL: IDisposable
     {
         private NpgsqlConnectionStringBuilder connectionString;
         private List<NpgsqlParameter> Parameters { get; set; }
