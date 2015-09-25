@@ -11,9 +11,6 @@ using MySql.Data.Types;
 
 namespace DBInterface
 {
-    /// <summary>
-    /// Public class that enables connection to a MySQL data base and execute commands.
-    /// </summary>
     public class DBConnectorMySQL: IDisposable
     {
         private MySqlConnectionStringBuilder connectionString;
