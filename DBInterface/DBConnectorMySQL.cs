@@ -11,11 +11,23 @@ using MySql.Data.Types;
 
 namespace DBInterface
 {
+    /// <summary>
+    /// Public class that enables connection to a MySQL data base and execute commands.
+    /// </summary>
     public class DBConnectorMySQL: IDisposable
     {
         private MySqlConnectionStringBuilder connectionString;
         private List<MySqlParameter> Parameters { get; set; }
         private bool disposed = false; //used for the Dispose method
+
+        /// <summary>
+        /// Gets a single result set in a data table
+        /// </summary>
+        public DataTable Table { get; private set; }
+        /// <summary>
+        /// Gets all result sets in a data set
+        /// </summary>
+        public DataSet Tables { get; private set; }
 
         /// <summary>
         /// Gets a list of Error objects with error messages
@@ -282,6 +294,92 @@ namespace DBInterface
                 ErrorList.Add(aError);
             }
             return resultSet;
+        }
+
+        /// <summary>
+        /// Uses a SQL Data Reader to load a data table with data from the query execution
+        /// </summary>
+        /// <param name="command">Command (Text command or Stored Procedure)</param>
+        /// <param name="type">Type of command (text, stored procedure or table-direct)</param>
+        /// <returns>Data Table with the execution results</returns>
+        public void LoadTable(string command, CommandType type)
+        {
+            DataTable resultSet = new DataTable();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString.ConnectionString))
+                {
+                    using (MySqlCommand cmd = new MySqlCommand(command))
+                    {
+                        cmd.Connection = connection;
+                        foreach (MySqlParameter parameter in Parameters)
+                        {
+                            cmd.Parameters.Add(parameter);
+                        }
+                        cmd.CommandType = type;
+                        cmd.Connection.Open();
+
+                        MySqlDataReader reader = null;
+                        reader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+
+                        resultSet.Load(reader);
+                        reader.Close();
+                        cmd.Connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error aError = new Error(ex.Source, ex.Message, GetCurrentMethod());
+                ErrorList.Add(aError);
+            }
+            Table = resultSet;
+        }
+
+        /// <summary>
+        /// Uses a SQL Data Reader to load a data set with data tables from the query execution
+        /// </summary>
+        /// <param name="command">Command (Text command or Stored Procedure)</param>
+        /// <param name="type">Type of command (text, stored procedure or table-direct)</param>
+        /// <returns>Data Set with Data Tables containing the execution results</returns>
+        public void LoadDataSet(string command, CommandType type)
+        {
+            DataSet resultSet = new DataSet();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString.ConnectionString))
+                {
+                    using (MySqlCommand cmd = new MySqlCommand(command))
+                    {
+                        cmd.Connection = connection;
+                        foreach (MySqlParameter parameter in Parameters)
+                        {
+                            cmd.Parameters.Add(parameter);
+                        }
+                        cmd.CommandType = type;
+                        cmd.Connection.Open();
+
+                        MySqlDataReader reader = null;
+                        reader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+
+                        do
+                        {
+                            DataTable table = new DataTable();
+                            table.Load(reader);
+                            resultSet.Tables.Add(table);
+                        } while (!reader.IsClosed);
+
+                        reader.Close();
+                        cmd.Connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error aError = new Error(ex.Source, ex.Message, GetCurrentMethod());
+                ErrorList.Add(aError);
+            }
+            Tables = resultSet;
         }
 
         /// <summary>
